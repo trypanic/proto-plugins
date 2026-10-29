@@ -36,7 +36,7 @@ jobs:
           psql = "18.3.0"
           sentrux = "0.5.7"
           skillshare = "0.19.5"
-          staticcheck = "2026.1.0"
+          staticcheck = "2026.2.2"
 
           [plugins.tools]
           golang-migrate = "file://./plugins/golang-migrate.toml"
@@ -86,4 +86,4 @@ jobs:
       - name: Verify staticcheck
         run: |
           version="$(proto run staticcheck -- -version 2>&1)"
-          test "$version" = "staticcheck 2026.1 (v0.7.0)"
+          test "$version" = "staticcheck 2026.2.2 (0.8.2)"

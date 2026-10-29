@@ -52,7 +52,7 @@ staticcheck = "https://raw.githubusercontent.com/trypanic/proto-plugins/main/plu
 
 Replace:
 
-- `<version>` with a release version from the upstream tool. Staticcheck's upstream tag `2026.1` should be pinned as `2026.1.0` because proto requires fully qualified versions.
+- `<version>` with a release version from the upstream tool. Staticcheck must be pinned to a patch release such as `2026.2.2`; its `.0` releases are not installable (see the staticcheck section).
 
 For example, when pinned in a project-level `.prototools`, running `proto install` from that project will install the configured tools.
 
@@ -209,7 +209,7 @@ https://github.com/runkids/skillshare/releases/download/v{version}/{download_fil
 
 ### staticcheck
 
-`plugins/staticcheck.toml` installs the `staticcheck` binary from GitHub release archives. Staticcheck release tags use a two-part calendar version such as `2026.1`; the plugin resolves these tags as fully qualified proto versions such as `2026.1.0`.
+`plugins/staticcheck.toml` installs the `staticcheck` binary from GitHub release archives. Staticcheck tags its `.0` releases with two parts (`2026.2`) and its patch releases with three (`2026.2.2`). Proto has no token for the raw tag, so one download URL cannot serve both forms. The plugin resolves only the three-part patch tags and downloads them by `{version}`; a `.0` release such as `2026.1.0` or `2026.2.0` is not installable. Pin a patch release, such as `2026.2.2`, the first that reads Go 1.27.2+ export data.
 
 - Linux: `staticcheck_linux_{arch}.tar.gz`
 - macOS: `staticcheck_darwin_{arch}.tar.gz`
@@ -225,7 +225,7 @@ The upstream archives contain the executable under a `staticcheck/` directory. T
 The plugin resolves available versions from Git tags in `https://github.com/dominikh/go-tools` and downloads archives from:
 
 ```text
-https://github.com/dominikh/go-tools/releases/download/{versionMajor}.{versionMinor}/{download_file}
+https://github.com/dominikh/go-tools/releases/download/{version}/{download_file}
 ```
 
 ## Development notes

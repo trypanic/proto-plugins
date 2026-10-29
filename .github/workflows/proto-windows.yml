@@ -48,7 +48,7 @@ jobs:
             $toolPlugins += "`npsql = `"file://./plugins/psql.toml`""
             $toolPins += "`nsentrux = `"0.5.7`""
             $toolPlugins += "`nsentrux = `"file://./plugins/sentrux.toml`""
-            $toolPins += "`nstaticcheck = `"2026.1.0`""
+            $toolPins += "`nstaticcheck = `"2026.2.2`""
             $toolPlugins += "`nstaticcheck = `"file://./plugins/staticcheck.toml`""
           }
 
@@ -114,6 +114,6 @@ jobs:
         shell: pwsh
         run: |
           $version = (& proto run staticcheck -- -version 2>&1 | Out-String).Trim()
-          if ($version -ne "staticcheck.exe 2026.1 (v0.7.0)") {
-            throw "Expected staticcheck.exe 2026.1 (v0.7.0), got '$version'"
+          if ($version -ne "staticcheck.exe 2026.2.2 (0.8.2)") {
+            throw "Expected staticcheck.exe 2026.2.2 (0.8.2), got '$version'"
           }

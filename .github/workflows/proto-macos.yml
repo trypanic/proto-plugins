@@ -35,7 +35,7 @@ jobs:
           mongosh = "2.8.3"
           psql = "18.3.0"
           skillshare = "0.19.5"
-          staticcheck = "2026.1.0"
+          staticcheck = "2026.2.2"
           EOF
           if [ "${{ matrix.arch }}" = "aarch64" ]; then
             cat >> .prototools <<'EOF'
@@ -93,4 +93,4 @@ jobs:
       - name: Verify staticcheck
         run: |
           version="$(proto run staticcheck -- -version 2>&1)"
-          test "$version" = "staticcheck 2026.1 (v0.7.0)"
+          test "$version" = "staticcheck 2026.2.2 (0.8.2)"

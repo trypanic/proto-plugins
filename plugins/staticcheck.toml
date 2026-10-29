@@ -17,7 +17,7 @@ download-file = "staticcheck_windows_{arch}.tar.gz"
 exe-path = "staticcheck/staticcheck.exe"
 
 [install]
-download-url = "https://github.com/dominikh/go-tools/releases/download/{versionMajor}.{versionMinor}/{download_file}"
+download-url = "https://github.com/dominikh/go-tools/releases/download/{version}/{download_file}"
 
 [install.arch]
 x86_64 = "amd64"
@@ -28,4 +28,4 @@ primary = true
 
 [resolve]
 git-url = "https://github.com/dominikh/go-tools"
-version-pattern = "^(?<major>\\d{4})(?:\\.(?<minor>\\d+))?$"
+version-pattern = "^(?<major>\\d{4})\\.(?<minor>\\d+)\\.(?<patch>\\d+)$"

@@ -30,7 +30,7 @@ golang-migrate = "4.19.0"
 mongosh = "2.8.3"
 sentrux = "0.5.7"
 skillshare = "0.19.5"
-staticcheck = "2026.1.0"
+staticcheck = "2026.2.2"
 
 [plugins.tools]
 golang-migrate = "file://$repo_root/plugins/golang-migrate.toml"
@@ -51,10 +51,10 @@ PROTO_HOME="$tmpdir/.proto" HOME="$tmpdir/user-home" proto install staticcheck -
 "$tmpdir/.proto/tools/mongosh/2.8.3/bin/mongosh" --version    # → 2.8.3
 SENTRUX_SKIP_GRAMMAR_DOWNLOAD=1 PROTO_HOME="$tmpdir/.proto" HOME="$tmpdir/user-home" proto run sentrux -- --version    # → sentrux 0.5.7
 "$tmpdir/.proto/tools/skillshare/0.19.5/skillshare" --version    # → skillshare v0.19.5
-"$tmpdir/.proto/tools/staticcheck/2026.1.0/staticcheck/staticcheck" -version    # → staticcheck 2026.1 (v0.7.0)
+"$tmpdir/.proto/tools/staticcheck/2026.2.2/staticcheck/staticcheck" -version    # → staticcheck 2026.2.2 (0.8.2)
 ```
 
-Use explicit tool versions, never `latest` — validation must be reproducible. Staticcheck's upstream `2026.1` tag is pinned as `2026.1.0` because Proto requires fully qualified versions. Only include `sentrux` in local validation on platforms it publishes: Linux `x86_64`/`aarch64`, macOS `aarch64`, and Windows `x86_64`. Only include `psql` on platforms `theseus-rs/postgresql-binaries` publishes: Linux and macOS `x86_64`/`aarch64`, and Windows `x86_64`. Only include `mongosh` on platforms it publishes: Linux and macOS `x86_64`/`aarch64`, and Windows `x86_64`.
+Use explicit tool versions, never `latest` — validation must be reproducible. Staticcheck is pinned to a patch release (`2026.2.2`): the plugin resolves only three-part tags, because upstream tags its `.0` releases with two parts (`2026.2`) and proto has no token for the raw tag. Only include `sentrux` in local validation on platforms it publishes: Linux `x86_64`/`aarch64`, macOS `aarch64`, and Windows `x86_64`. Only include `psql` on platforms `theseus-rs/postgresql-binaries` publishes: Linux and macOS `x86_64`/`aarch64`, and Windows `x86_64`. Only include `mongosh` on platforms it publishes: Linux and macOS `x86_64`/`aarch64`, and Windows `x86_64`.
 
 ## CI
 
