@@ -36,6 +36,7 @@ jobs:
           psql = "18.3.0"
           skillshare = "0.19.5"
           staticcheck = "2026.2.2"
+          task = "3.54.0"
           EOF
           if [ "${{ matrix.arch }}" = "aarch64" ]; then
             cat >> .prototools <<'EOF'
@@ -49,6 +50,7 @@ jobs:
           psql = "file://./plugins/psql.toml"
           skillshare = "file://./plugins/skillshare.toml"
           staticcheck = "file://./plugins/staticcheck.toml"
+          task = "file://./plugins/task.toml"
           EOF
           if [ "${{ matrix.arch }}" = "aarch64" ]; then
             cat >> .prototools <<'EOF'
@@ -94,3 +96,8 @@ jobs:
         run: |
           version="$(proto run staticcheck -- -version 2>&1)"
           test "$version" = "staticcheck 2026.2.2 (0.8.2)"
+
+      - name: Verify task
+        run: |
+          version="$(proto run task -- --version 2>&1)"
+          test "$version" = "3.54.0"

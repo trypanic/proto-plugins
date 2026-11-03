@@ -14,6 +14,7 @@ The plugin files live under `plugins/`. Each TOML file is a non-WASM proto plugi
 | `sentrux` | `plugins/sentrux.toml` | `sentrux` | `sentrux/sentrux` | Linux on `x86_64` and `aarch64`; macOS on `aarch64`; Windows on `x86_64` |
 | `skillshare` | `plugins/skillshare.toml` | `skillshare` | `runkids/skillshare` | Linux, macOS, and Windows on `x86_64` and `aarch64` |
 | `staticcheck` | `plugins/staticcheck.toml` | `staticcheck` | `dominikh/go-tools` | Linux and macOS on `x86_64` and `aarch64`; Windows on `x86_64` |
+| `task` | `plugins/task.toml` | `task` | `go-task/task` ([Taskfile](https://taskfile.dev)) | Linux, macOS, and Windows on `x86_64` and `aarch64` |
 
 ## Requirements
 
@@ -40,6 +41,7 @@ psql = "<version>"
 sentrux = "<version>"
 skillshare = "<version>"
 staticcheck = "<version>"
+task = "<version>"
 
 [plugins.tools]
 golang-migrate = "https://raw.githubusercontent.com/trypanic/proto-plugins/main/plugins/golang-migrate.toml"
@@ -48,6 +50,7 @@ psql = "https://raw.githubusercontent.com/trypanic/proto-plugins/main/plugins/ps
 sentrux = "https://raw.githubusercontent.com/trypanic/proto-plugins/main/plugins/sentrux.toml"
 skillshare = "https://raw.githubusercontent.com/trypanic/proto-plugins/main/plugins/skillshare.toml"
 staticcheck = "https://raw.githubusercontent.com/trypanic/proto-plugins/main/plugins/staticcheck.toml"
+task = "https://raw.githubusercontent.com/trypanic/proto-plugins/main/plugins/task.toml"
 ```
 
 Replace:
@@ -55,6 +58,8 @@ Replace:
 - `<version>` with a release version from the upstream tool. Staticcheck must be pinned to a patch release such as `2026.2.2`; its `.0` releases are not installable (see the staticcheck section).
 
 For example, when pinned in a project-level `.prototools`, running `proto install` from that project will install the configured tools.
+
+Recent proto versions ignore plugins declared in an untrusted local `.prototools`. Run `proto trust` once in the consuming repository after reviewing its config. CI environments are trusted automatically.
 
 ## Install and run
 
@@ -73,6 +78,7 @@ proto install psql <version>
 proto install sentrux <version>
 proto install skillshare <version>
 proto install staticcheck <version>
+proto install task <version>
 ```
 
 Run through proto:
@@ -84,6 +90,7 @@ proto run psql -- --version
 proto run sentrux -- --version
 proto run skillshare -- --help
 proto run staticcheck -- -version
+proto run task -- --version
 ```
 
 After proto shims are active in `PATH`, the primary executable can also be called directly:
@@ -95,6 +102,7 @@ psql --version
 sentrux --version
 skillshare --help
 staticcheck -version
+task --version
 ```
 
 ## CI validation
@@ -108,7 +116,7 @@ Pushes to `main` run GitHub Actions validation for the checked-out plugin defini
 - Windows `x86_64` on `windows-2025`
 - Windows `aarch64` on `windows-11-arm`
 
-Each job installs proto, creates a temporary `.prototools` that points to the checked-out TOML plugin files under `plugins/`, installs supported plugin tools, and verifies the installed binaries. Mongosh is validated on Linux and macOS for both configured architectures, and on Windows `x86_64`. Psql is validated on Linux and macOS for both configured architectures, and on Windows `x86_64`. Sentrux is validated on Linux for both configured architectures, on macOS `aarch64`, and on Windows `x86_64`. Staticcheck is validated on Linux and macOS for both configured architectures, and on Windows `x86_64`.
+Each job installs proto, creates a temporary `.prototools` that points to the checked-out TOML plugin files under `plugins/`, installs supported plugin tools, and verifies the installed binaries. Mongosh is validated on Linux and macOS for both configured architectures, and on Windows `x86_64`. Psql is validated on Linux and macOS for both configured architectures, and on Windows `x86_64`. Sentrux is validated on Linux for both configured architectures, on macOS `aarch64`, and on Windows `x86_64`. Staticcheck is validated on Linux and macOS for both configured architectures, and on Windows `x86_64`. Golang-migrate, skillshare, and task are validated on every listed platform and architecture.
 
 ## Plugin details
 
@@ -228,8 +236,32 @@ The plugin resolves available versions from Git tags in `https://github.com/domi
 https://github.com/dominikh/go-tools/releases/download/{version}/{download_file}
 ```
 
+### task
+
+`plugins/task.toml` installs the `task` binary ([Taskfile](https://taskfile.dev)) from GitHub release archives:
+
+- Linux: `task_linux_{arch}.tar.gz`
+- macOS: `task_darwin_{arch}.tar.gz`
+- Windows: `task_windows_{arch}.zip`
+
+The archives contain the executable at their root, next to shell completion files. The plugin maps proto/Rust architecture names to the release archive naming used by Task:
+
+| proto arch | Release arch |
+| --- | --- |
+| `x86_64` | `amd64` |
+| `aarch64` | `arm64` |
+
+The plugin resolves available versions from Git tags in `https://github.com/go-task/task` and downloads archives from:
+
+```text
+https://github.com/go-task/task/releases/download/v{version}/{download_file}
+```
+
+The upstream `nightly` tag is not a semantic version and is not installable through this plugin.
+
 ## Development notes
 
+- Agent instructions live in `AGENTS.md`, the single instruction file read by coding agents. Keep it in sync with this README.
 - Keep these plugins static and declarative unless a tool needs custom logic. Simple CLI archive installs fit proto's non-WASM plugin format.
 - Add a `[platform.*]` entry only when the upstream project publishes a matching archive or standalone binary.
 - Keep `[install.exes.<name>] primary = true` aligned with the executable users should run by default.

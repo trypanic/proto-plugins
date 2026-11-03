@@ -34,11 +34,13 @@ jobs:
           $toolPins = @'
           golang-migrate = "4.19.0"
           skillshare = "0.19.5"
+          task = "3.54.0"
           '@
 
           $toolPlugins = @'
           golang-migrate = "file://./plugins/golang-migrate.toml"
           skillshare = "file://./plugins/skillshare.toml"
+          task = "file://./plugins/task.toml"
           '@
 
           if ("${{ matrix.arch }}" -eq "x86_64") {
@@ -116,4 +118,12 @@ jobs:
           $version = (& proto run staticcheck -- -version 2>&1 | Out-String).Trim()
           if ($version -ne "staticcheck.exe 2026.2.2 (0.8.2)") {
             throw "Expected staticcheck.exe 2026.2.2 (0.8.2), got '$version'"
+          }
+
+      - name: Verify task
+        shell: pwsh
+        run: |
+          $version = (& proto run task -- --version 2>&1 | Out-String).Trim()
+          if ($version -ne "3.54.0") {
+            throw "Expected task 3.54.0, got '$version'"
           }
